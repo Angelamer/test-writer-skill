@@ -28,8 +28,14 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements-dev.txt
 
-      - name: Run full QA workflow
-        run: make qa-full
+      - name: Run formatting, lint, validation, and tests
+        run: make qa
+
+      - name: Generate coverage artifacts
+        run: make test-cov
+
+      - name: Generate example report
+        run: make report-example
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
