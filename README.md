@@ -1,0 +1,99 @@
+# Test Writer Skill
+
+A provider-neutral skill and command-line workflow for designing Python tests, running quality checks, and producing evidence-based Markdown reports. It works with any coding agent and does not require an external LLM.
+
+## What it provides
+
+- A concise [`SKILL.md`](SKILL.md) workflow for unit and integration test generation.
+- `unittest`-compatible execution with configurable source, test, and report paths.
+- Black formatting, Flake8 linting, compilation checks, coverage, and aggregate QA commands.
+- Markdown reports containing hashes, timestamps, exact commands, exit codes, and raw output.
+- Optional OpenAI-compatible, Ollama, or prompt-only model invocation without third-party Python SDKs.
+- A tested numerical example that keeps model files and plotting outside the unit-test boundary.
+
+## Repository layout
+
+```text
+.
+├── SKILL.md                         # Instructions consumed by coding agents
+├── Makefile                         # Reproducible developer and reporting commands
+├── agents/openai.yaml               # Optional Codex UI metadata
+├── scripts/
+│   ├── invoke_model.py              # Optional model-provider adapter
+│   └── test_report.py               # Test runner and Markdown report generator
+├── references/model-providers.md    # Hosted and local model configuration
+├── tests/test_tools.py              # Tests for the deterministic tooling
+└── examples/
+    ├── 2nn_estimator_id.py
+    ├── tests/test_2nn_estimator_id.py
+    └── reports/2nn_estimator_id-report.md
+```
+
+## Quick start
+
+Python 3.10 or newer is recommended.
+
+```bash
+git clone https://github.com/Angelamer/test-writer-skill.git
+cd test-writer-skill
+python -m pip install -r requirements-dev.txt
+make qa
+make report-example
+```
+
+Run `make help` to list all commands. The default interpreter is `python`; override it when needed, for example `make PYTHON=python3 qa`.
+
+## Make commands
+
+| Command | Purpose |
+|---|---|
+| `make pretty` | Format Python code with Black. |
+| `make pretty-check` | Verify formatting without modifying files. |
+| `make lint` | Run Flake8. |
+| `make compile` | Compile Python files to detect syntax errors. |
+| `make validate-skill` | Validate skill metadata when the Codex validator is installed. |
+| `make test` | Run tests for the bundled tools. |
+| `make test-example` | Run the 2NN example tests with a non-interactive plot backend. |
+| `make test-all` | Run tool and example tests. |
+| `make test-cov` | Run all discovered tests with branch coverage. |
+| `make report-example` | Rebuild the tracked 2NN Markdown report. |
+| `make qa` | Run formatting, lint, compilation, skill validation, and all tests. |
+| `make qa-fix` | Format the code and then run `make qa`. |
+| `make qa-full` | Run QA, coverage, and report generation. |
+
+Generate a report for another source/test pair:
+
+```bash
+make report \
+  SOURCE=path/to/module.py \
+  TEST_FILE=path/to/test_module.py \
+  REPORT=path/to/report.md
+```
+
+The test command is executed without a shell. The report is written even when tests fail, and `make` preserves the failing exit code.
+
+## Optional model backends
+
+The active coding agent should normally create tests directly. A separate model call is optional.
+
+Prompt-only mode requires no credentials:
+
+```bash
+make model PROVIDER=prompt PROMPT_FILE=request.txt
+```
+
+For hosted or local endpoints, configure environment variables as documented in [`references/model-providers.md`](references/model-providers.md). Never put API keys in a Make variable, command argument, source file, or report.
+
+## Design principles
+
+The workflow separates three responsibilities:
+
+1. The coding agent analyzes behavior and writes tests.
+2. Make commands execute deterministic formatting, linting, testing, and reporting steps.
+3. Markdown reports preserve auditable evidence and source/test hashes.
+
+Existing project conventions take precedence over the bundled defaults. Tests should isolate external files, networks, model artifacts, and plotting while exercising the real production logic.
+
+## Inspiration
+
+The Make-based quality workflow and separation between source code, tests, and QA reporting were inspired by the [ICAMS-MIDS Python unittests teaching repository](https://gitlab.ruhr-uni-bochum.de/icams-mids/teaching/python_unittests/-/tree/main). This project is an independent, provider-neutral implementation and does not include the teaching repository's base unittest materials.

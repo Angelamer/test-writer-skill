@@ -2,4 +2,5 @@ __pycache__/
 *.py[cod]
 .coverage
 .pytest_cache/
+.cache/
 2nn_id_plot.png

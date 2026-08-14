@@ -33,7 +33,8 @@ def compute_2nn_id(Z):
 
     mu_sorted = np.sort(mu)
     sample_count = len(mu_sorted)
-    empirical_cdf = np.arange(1, sample_count + 1) / sample_count
+    # Keep the empirical plotting positions below one so the log transform is finite.
+    empirical_cdf = np.arange(1, sample_count + 1) / (sample_count + 1)
     x = np.log(mu_sorted)
     y = -np.log(1 - empirical_cdf)
     slope, _intercept = np.polyfit(x, y, 1)
