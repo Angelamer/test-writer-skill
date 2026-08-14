@@ -44,7 +44,7 @@ jobs:
         run: make test-all
 
       - name: Generate coverage artifacts
-        run: make test-cov
+        run: make coverage-html
 
       - name: Generate example report
         run: make report-example

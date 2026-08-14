@@ -6,12 +6,18 @@
 |---|---|
 | Status | **PASS** |
 | Exit code | `0` |
-| Run at | `2026-08-14T11:15:07+00:00` |
+| Run at | `2026-08-14T11:27:22+00:00` |
 | Source SHA-256 | `e6ef38414315` |
 | Test SHA-256 | `2bc8a698d663` |
 | Target source coverage | 57.1% (42/71 lines) |
-| Commit | `7048bbb27269` |
+| Commit | `dbb1ac4dd347` |
 | CI | local run |
+
+## Target Source Coverage Details
+
+- **Covered lines:** 1, 3-6, 9, 11-13, 16-19, 21-24, 26-28, 30, 34-35, 37-41, 44-48, 50, 54-58, 67-68, 91
+- **Missing lines:** 31-32, 51-52, 59, 61-65, 70-75, 77-88, 92
+- **Missing branches:** 30 -> 31, 50 -> 51, 55 -> 61, 57 -> 59, 63 -> 64, 63 -> 65, 67 -> 70, 73 -> 74, 73 -> 77, 91 -> 92
 
 ## Command
 

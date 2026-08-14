@@ -12,7 +12,7 @@ SKILL_VALIDATOR ?= $(HOME)/.codex/skills/.system/skill-creator/scripts/quick_val
 .DEFAULT_GOAL := help
 
 .PHONY: help install-dev pretty pretty-check lint compile validate-skill \
-	test test-example test-all test-cov report report-example model qa qa-fix qa-full clean
+	test test-example test-all test-cov coverage-html report report-example model qa qa-fix qa-full clean
 
 help:
 	@echo "Test Writer Skill commands"
@@ -26,6 +26,7 @@ help:
 	@echo "  make test-example      Run the bundled 2NN example tests"
 	@echo "  make test-all          Run tool and example tests"
 	@echo "  make test-cov          Run all tests with branch coverage"
+	@echo "  make coverage-html     Generate htmlcov/index.html with line annotations"
 	@echo "  make report            Run TEST_FILE and write REPORT for SOURCE"
 	@echo "  make report-example    Generate the bundled example report"
 	@echo "  make model             Invoke PROVIDER using PROMPT_FILE"
@@ -71,6 +72,10 @@ test-cov:
 	$(PYTHON) -m coverage json -o coverage.json
 	$(PYTHON) -m coverage xml -o coverage.xml
 
+coverage-html: test-cov
+	$(PYTHON) -m coverage html -d htmlcov
+	@echo "HTML coverage report: htmlcov/index.html"
+
 report:
 	@test -f "$(SOURCE)" || (echo "SOURCE not found: $(SOURCE)"; exit 2)
 	@test -f "$(TEST_FILE)" || (echo "TEST_FILE not found: $(TEST_FILE)"; exit 2)
@@ -95,9 +100,10 @@ qa: pretty-check lint compile validate-skill test-all
 
 qa-fix: pretty qa
 
-qa-full: qa test-cov report-example
+qa-full: qa coverage-html report-example
 
 clean:
 	find scripts examples tests -type d -name __pycache__ -prune -exec rm -rf {} +
 	find scripts examples tests -type f -name '*.py[co]' -delete
 	$(RM) .coverage coverage.json coverage.xml
+	$(RM) -r htmlcov

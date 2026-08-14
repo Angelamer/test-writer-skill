@@ -59,7 +59,8 @@ Run `make help` to list all commands. The default interpreter is `python`; overr
 | `make test` | Run tests for the bundled tools. |
 | `make test-example` | Run the 2NN example tests with a non-interactive plot backend. |
 | `make test-all` | Run tool and example tests. |
-| `make test-cov` | Run all discovered tests with branch coverage. |
+| `make test-cov` | Run all discovered tests and generate JSON/XML coverage. |
+| `make coverage-html` | Generate `htmlcov/index.html` with annotated source lines. |
 | `make report-example` | Rebuild the tracked 2NN Markdown report. |
 | `make qa` | Run formatting, lint, compilation, skill validation, and all tests. |
 | `make qa-fix` | Format the code and then run `make qa`. |
@@ -74,7 +75,7 @@ make report \
   REPORT=path/to/report.md
 ```
 
-The test command is executed without a shell. The report is written even when tests fail, and `make` preserves the failing exit code.
+The test command is executed without a shell. The report is written even when tests fail, and `make` preserves the failing exit code. Its target-source section lists compact covered-line ranges, missing-line ranges, and missing branch transitions. Run `make coverage-html` for an interactive line-by-line view in `htmlcov/index.html`.
 
 ## Continuous integration and coverage
 

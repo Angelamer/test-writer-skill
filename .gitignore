@@ -3,6 +3,7 @@ __pycache__/
 .coverage
 coverage.json
 coverage.xml
+htmlcov/
 .pytest_cache/
 .cache/
 2nn_id_plot.png

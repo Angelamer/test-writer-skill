@@ -41,7 +41,7 @@ class TestReportTool(unittest.TestCase):
             path.write_text("second", encoding="utf-8")
             self.assertNotEqual(first, module.digest(path))
 
-    def test_coverage_summary_reads_target_file_only(self):
+    def test_coverage_details_read_target_file_only(self):
         module = load_script("test_report.py")
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "coverage.json"
@@ -56,7 +56,10 @@ class TestReportTool(unittest.TestCase):
                                     "percent_covered": 87.25,
                                     "covered_lines": 349,
                                     "num_statements": 400,
-                                }
+                                },
+                                "executed_lines": [1, 2, 3, 7],
+                                "missing_lines": [4, 5, 9],
+                                "missing_branches": [[3, 4], [8, -1]],
                             },
                             "unrelated.py": {
                                 "summary": {
@@ -70,9 +73,11 @@ class TestReportTool(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            self.assertEqual(
-                module.coverage_summary(path, source), "87.2% (349/400 lines)"
-            )
+            details = module.coverage_details(path, source)
+            self.assertEqual(details["summary"], "87.2% (349/400 lines)")
+            self.assertEqual(details["covered_lines"], "1-3, 7")
+            self.assertEqual(details["missing_lines"], "4-5, 9")
+            self.assertEqual(details["missing_branches"], "3 -> 4, 8 -> exit")
 
     def test_coverage_summary_does_not_fall_back_to_aggregate(self):
         module = load_script("test_report.py")
@@ -83,8 +88,13 @@ class TestReportTool(unittest.TestCase):
                 encoding="utf-8",
             )
             self.assertEqual(
-                module.coverage_summary(path, Path("missing.py")), "not measured"
+                module.coverage_details(path, Path("missing.py"))["summary"],
+                "not measured",
             )
+
+    def test_compact_lines_collapses_consecutive_ranges(self):
+        module = load_script("test_report.py")
+        self.assertEqual(module.compact_lines([5, 1, 2, 2, 3, 8]), "1-3, 5, 8")
 
     def test_repository_context_builds_github_links(self):
         module = load_script("test_report.py")

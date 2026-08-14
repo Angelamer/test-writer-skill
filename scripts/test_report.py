@@ -14,13 +14,35 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()[:12]
 
 
-def coverage_summary(path, source):
+def compact_lines(lines):
+    numbers = sorted(set(int(line) for line in lines))
+    if not numbers:
+        return "none"
+    ranges = []
+    start = previous = numbers[0]
+    for number in numbers[1:]:
+        if number == previous + 1:
+            previous = number
+            continue
+        ranges.append(str(start) if start == previous else f"{start}-{previous}")
+        start = previous = number
+    ranges.append(str(start) if start == previous else f"{start}-{previous}")
+    return ", ".join(ranges)
+
+
+def coverage_details(path, source):
+    unavailable = {
+        "summary": "not measured",
+        "covered_lines": "not measured",
+        "missing_lines": "not measured",
+        "missing_branches": "not measured",
+    }
     if not path.is_file():
-        return "not measured"
+        return unavailable
     try:
         files = json.loads(path.read_text(encoding="utf-8"))["files"]
     except (KeyError, TypeError, ValueError, json.JSONDecodeError):
-        return "invalid coverage data"
+        return {key: "invalid coverage data" for key in unavailable}
 
     source_resolved = source.resolve()
     match = next(
@@ -32,15 +54,26 @@ def coverage_summary(path, source):
         None,
     )
     if match is None:
-        return "not measured"
+        return unavailable
     try:
         summary = match["summary"]
         percent = float(summary["percent_covered"])
         covered = int(summary["covered_lines"])
         statements = int(summary["num_statements"])
+        covered_lines = compact_lines(match["executed_lines"])
+        missing_lines = compact_lines(match["missing_lines"])
+        missing_branches = ", ".join(
+            f"{source_line} -> {'exit' if destination < 0 else destination}"
+            for source_line, destination in match["missing_branches"]
+        )
     except (KeyError, TypeError, ValueError):
-        return "invalid coverage data"
-    return f"{percent:.1f}% ({covered}/{statements} lines)"
+        return {key: "invalid coverage data" for key in unavailable}
+    return {
+        "summary": f"{percent:.1f}% ({covered}/{statements} lines)",
+        "covered_lines": covered_lines,
+        "missing_lines": missing_lines,
+        "missing_branches": missing_branches or "none",
+    }
 
 
 def repository_context(environment=None):
@@ -92,6 +125,7 @@ def main():
     timestamp = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
     rendered_command = " ".join(command)
     commit, ci_run = repository_context()
+    coverage = coverage_details(args.coverage_json, args.source)
     content = f"""# Test Report: `{args.source.name}`
 
 ## Result
@@ -103,9 +137,15 @@ def main():
 | Run at | `{timestamp}` |
 | Source SHA-256 | `{digest(args.source)}` |
 | Test SHA-256 | `{digest(args.test)}` |
-| Target source coverage | {coverage_summary(args.coverage_json, args.source)} |
+| Target source coverage | {coverage['summary']} |
 | Commit | {commit} |
 | CI | {ci_run} |
+
+## Target Source Coverage Details
+
+- **Covered lines:** {coverage['covered_lines']}
+- **Missing lines:** {coverage['missing_lines']}
+- **Missing branches:** {coverage['missing_branches']}
 
 ## Command
 
