@@ -78,9 +78,9 @@ The test command is executed without a shell. The report is written even when te
 
 ## Continuous integration and coverage
 
-The `CI` GitHub Actions workflow runs `make qa-full` for pushes and pull requests targeting `main`. It uploads `coverage.xml` to Codecov using GitHub OIDC, so the workflow does not require a long-lived Codecov token. The tracked example report includes aggregate measured coverage, the commit SHA, and a CI run link when generated inside GitHub Actions.
+The `CI` GitHub Actions workflow runs the same checks as `make qa-full` for pushes and pull requests targeting `main`. It uploads `coverage.xml` to Codecov using GitHub OIDC, so the workflow does not require a long-lived Codecov token. The tracked example report includes aggregate measured coverage, the commit SHA, and a CI run link when generated inside GitHub Actions.
 
-The CI badge reflects the workflow result. The coverage badge is populated after Codecov processes the first successful workflow upload.
+The CI badge reflects formatting, lint, compilation, tests, coverage generation, and report generation. Codecov upload is non-blocking because external service availability must not hide the repository's own QA result. The coverage badge is populated after the repository is activated in Codecov and Codecov processes a successful workflow upload.
 
 ## Optional model backends
 
