@@ -28,8 +28,20 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements-dev.txt
 
-      - name: Run formatting, lint, validation, and tests
-        run: make qa
+      - name: Check formatting
+        run: make pretty-check
+
+      - name: Run lint
+        run: make lint
+
+      - name: Compile Python sources
+        run: make compile
+
+      - name: Validate skill metadata
+        run: make validate-skill
+
+      - name: Run tests
+        run: make test-all
 
       - name: Generate coverage artifacts
         run: make test-cov
