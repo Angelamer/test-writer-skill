@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Writer"
+  short_description: "Write, run, and report evidence-based Python tests"
+  default_prompt: "Use $test-writer to analyze this Python code, create focused tests, run them, and produce a Markdown report."
