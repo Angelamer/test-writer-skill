@@ -4,6 +4,8 @@
 [![codecov](https://codecov.io/gh/Angelamer/test-writer-skill/branch/main/graph/badge.svg)](https://codecov.io/gh/Angelamer/test-writer-skill)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 
+[View the latest annotated HTML coverage report](https://angelamer.github.io/test-writer-skill/)
+
 A provider-neutral skill and command-line workflow for designing Python tests, running quality checks, and producing evidence-based Markdown reports. It works with any coding agent and does not require an external LLM.
 
 ## What it provides
@@ -79,9 +81,11 @@ The test command is executed without a shell. The report is written even when te
 
 ## Continuous integration and coverage
 
-The `CI` GitHub Actions workflow runs the same checks as `make qa-full` for pushes and pull requests targeting `main`. It uploads `coverage.xml` to Codecov using GitHub OIDC, so the workflow does not require a long-lived Codecov token. The tracked example report includes coverage for the target source file only, the commit SHA, and a CI run link when generated inside GitHub Actions. Coverage from tests, skill tooling, and unrelated modules is excluded from the report field.
+The `CI` GitHub Actions workflow runs the same checks as `make qa-full` for pushes and pull requests targeting `main`. It uploads `coverage.xml` to Codecov using GitHub OIDC, so the workflow does not require a long-lived Codecov token. It also packages the ignored `htmlcov/` directory as a CI artifact and deploys it to GitHub Pages without committing generated HTML. The tracked example report includes coverage for the target source file only, the commit SHA, the stable HTML coverage link, and a CI run link when generated inside GitHub Actions. Coverage from tests, skill tooling, and unrelated modules is excluded from the report field.
 
 The CI badge reflects formatting, lint, compilation, tests, coverage generation, and report generation. Codecov upload is non-blocking because external service availability must not hide the repository's own QA result. The coverage badge is populated after the repository is activated in Codecov and Codecov processes a successful workflow upload.
+
+To publish the HTML link for the first time, set the repository's Pages source to **GitHub Actions** under **Settings → Pages**. Pages deployment is non-blocking so this one-time repository setting cannot turn a valid QA run red.
 
 ## Optional model backends
 

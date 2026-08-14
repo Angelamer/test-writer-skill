@@ -6,11 +6,12 @@
 |---|---|
 | Status | **PASS** |
 | Exit code | `0` |
-| Run at | `2026-08-14T11:27:22+00:00` |
+| Run at | `2026-08-14T11:36:19+00:00` |
 | Source SHA-256 | `e6ef38414315` |
 | Test SHA-256 | `2bc8a698d663` |
 | Target source coverage | 57.1% (42/71 lines) |
-| Commit | `dbb1ac4dd347` |
+| HTML coverage | [Open annotated source](https://angelamer.github.io/test-writer-skill/) |
+| Commit | `5052bf341f21` |
 | CI | local run |
 
 ## Target Source Coverage Details
@@ -36,7 +37,7 @@ test_rejects_configuration_with_no_selected_dataset (examples.tests.test_2nn_est
 test_requires_roi_data_when_roi_mode_is_selected (examples.tests.test_2nn_estimator_id.TestMain.test_requires_roi_data_when_roi_mode_is_selected) ... ok
 
 ----------------------------------------------------------------------
-Ran 4 tests in 0.001s
+Ran 4 tests in 0.002s
 
 OK
 ```

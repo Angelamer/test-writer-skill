@@ -5,6 +5,7 @@ REPORT ?= examples/reports/2nn_estimator_id-report.md
 PROVIDER ?= prompt
 PROMPT_FILE ?= request.txt
 MPLCONFIGDIR ?= .cache/matplotlib
+HTML_COVERAGE_URL ?= https://angelamer.github.io/test-writer-skill/
 
 PYTHON_PATHS := scripts examples tests
 SKILL_VALIDATOR ?= $(HOME)/.codex/skills/.system/skill-creator/scripts/quick_validate.py
@@ -84,6 +85,7 @@ report:
 		--test "$(TEST_FILE)" \
 		--report "$(REPORT)" \
 		--coverage-json coverage.json \
+		--html-coverage-url "$(HTML_COVERAGE_URL)" \
 		-- $(PYTHON) -m unittest -v "$(TEST_FILE)"
 
 report-example:

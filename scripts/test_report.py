@@ -110,6 +110,7 @@ def main():
     parser.add_argument("--test", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument("--coverage-json", type=Path, default=Path("coverage.json"))
+    parser.add_argument("--html-coverage-url")
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args()
     command = args.command[1:] if args.command[:1] == ["--"] else args.command
@@ -126,6 +127,11 @@ def main():
     rendered_command = " ".join(command)
     commit, ci_run = repository_context()
     coverage = coverage_details(args.coverage_json, args.source)
+    html_coverage = (
+        f"[Open annotated source]({args.html_coverage_url})"
+        if args.html_coverage_url
+        else "not published"
+    )
     content = f"""# Test Report: `{args.source.name}`
 
 ## Result
@@ -138,6 +144,7 @@ def main():
 | Source SHA-256 | `{digest(args.source)}` |
 | Test SHA-256 | `{digest(args.test)}` |
 | Target source coverage | {coverage['summary']} |
+| HTML coverage | {html_coverage} |
 | Commit | {commit} |
 | CI | {ci_run} |
 
