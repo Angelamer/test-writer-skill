@@ -85,6 +85,15 @@ The `CI` GitHub Actions workflow runs the same checks as `make qa-full` for push
 
 The CI badge reflects formatting, lint, compilation, tests, coverage generation, and report generation. Codecov upload is non-blocking because external service availability must not hide the repository's own QA result. The coverage badge is populated after the repository is activated in Codecov and Codecov processes a successful workflow upload.
 
+The two coverage views have intentionally different scopes:
+
+| View | Scope |
+|---|---|
+| Markdown test report | Only the file passed as `SOURCE`; test files and unrelated modules do not affect the percentage. |
+| Codecov badge and HTML report | Aggregate non-test Python code under `scripts/` and `examples/`, configured by `.coveragerc`. |
+
+`tests/` and `examples/tests/` are excluded from aggregate coverage. This prevents highly covered test code from inflating the reported quality of the code it tests. Files inside the configured source directories are included even when no test imports them, so entirely untested production/tool modules remain visible as zero coverage.
+
 To publish the HTML link for the first time, set the repository's Pages source to **GitHub Actions** under **Settings → Pages**. Pages deployment is non-blocking so this one-time repository setting cannot turn a valid QA run red.
 
 ## Optional model backends

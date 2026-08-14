@@ -67,14 +67,14 @@ test-example:
 test-all: test test-example
 
 test-cov:
-	MPLBACKEND=Agg MPLCONFIGDIR="$(MPLCONFIGDIR)" $(PYTHON) -m coverage run --branch -m unittest -v \
+	MPLBACKEND=Agg MPLCONFIGDIR="$(MPLCONFIGDIR)" $(PYTHON) -m coverage run -m unittest -v \
 		tests/test_tools.py $(TEST_FILE)
 	$(PYTHON) -m coverage report -m
 	$(PYTHON) -m coverage json -o coverage.json
 	$(PYTHON) -m coverage xml -o coverage.xml
 
 coverage-html: test-cov
-	$(PYTHON) -m coverage html -d htmlcov
+	$(PYTHON) -m coverage html
 	@echo "HTML coverage report: htmlcov/index.html"
 
 report:

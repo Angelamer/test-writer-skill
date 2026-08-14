@@ -15,7 +15,8 @@ Create tests that expose behavior rather than merely increase coverage.
 4. Add focused tests for normal behavior, meaningful boundaries, failure paths, and regressions. Do not edit production code unless the user also requested a fix.
 5. Run the narrowest test command first, then the relevant suite. Prefer existing project commands; use the bundled Make commands when working in this repository. Record the exact command and its exit status.
 6. Generate a Markdown report with `make report` or `scripts/test_report.py`. Report coverage, covered lines, missing lines, and missing branches for the target source file, not aggregate project or test-code coverage. Use `make coverage-html` when a line-by-line HTML view is useful. Report failures honestly and explain the likely production defect.
-7. Review the diff for unrelated changes, secrets, brittle assertions, and provider-specific attribution.
+7. Exclude test files from aggregate coverage badges and HTML summaries. Keep target-source coverage in each Markdown report distinct from repository-wide non-test coverage.
+8. Review the diff for unrelated changes, secrets, brittle assertions, and provider-specific attribution.
 
 ## Model and resource policy
 
