@@ -8,6 +8,8 @@ MPLCONFIGDIR ?= .cache/matplotlib
 HTML_COVERAGE_URL ?= https://angelamer.github.io/test-writer-skill/
 
 PYTHON_PATHS := scripts examples tests
+TOOL_TEST_FILES := $(wildcard tests/test_*.py)
+EXAMPLE_TEST_FILES := $(wildcard examples/tests/test_*.py)
 SKILL_VALIDATOR ?= $(HOME)/.codex/skills/.system/skill-creator/scripts/quick_validate.py
 
 .DEFAULT_GOAL := help
@@ -59,16 +61,16 @@ validate-skill:
 	fi
 
 test:
-	$(PYTHON) -m unittest discover -s tests -p 'test_*.py' -v
+	$(PYTHON) -m unittest -v $(TOOL_TEST_FILES)
 
 test-example:
-	MPLBACKEND=Agg MPLCONFIGDIR="$(MPLCONFIGDIR)" $(PYTHON) -m unittest -v $(TEST_FILE)
+	MPLBACKEND=Agg MPLCONFIGDIR="$(MPLCONFIGDIR)" $(PYTHON) -m unittest -v $(EXAMPLE_TEST_FILES)
 
 test-all: test test-example
 
 test-cov:
 	MPLBACKEND=Agg MPLCONFIGDIR="$(MPLCONFIGDIR)" $(PYTHON) -m coverage run -m unittest -v \
-		tests/test_tools.py $(TEST_FILE)
+		$(TOOL_TEST_FILES) $(EXAMPLE_TEST_FILES)
 	$(PYTHON) -m coverage report -m
 	$(PYTHON) -m coverage json -o coverage.json
 	$(PYTHON) -m coverage xml -o coverage.xml

@@ -31,8 +31,12 @@ A provider-neutral skill and command-line workflow for designing Python tests, r
 ├── tests/test_tools.py              # Tests for the deterministic tooling
 └── examples/
     ├── 2nn_estimator_id.py
+    ├── src/user_client.py
     ├── tests/test_2nn_estimator_id.py
-    └── reports/2nn_estimator_id-report.md
+    ├── tests/test_user_client.py
+    └── reports/
+        ├── 2nn_estimator_id-report.md
+        └── user_client-report.md
 ```
 
 ## Quick start
