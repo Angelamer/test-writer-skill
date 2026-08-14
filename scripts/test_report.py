@@ -14,15 +14,31 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()[:12]
 
 
-def coverage_summary(path):
+def coverage_summary(path, source):
     if not path.is_file():
         return "not measured"
     try:
-        totals = json.loads(path.read_text(encoding="utf-8"))["totals"]
-        percent = float(totals["percent_covered"])
-        covered = int(totals["covered_lines"])
-        statements = int(totals["num_statements"])
+        files = json.loads(path.read_text(encoding="utf-8"))["files"]
     except (KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return "invalid coverage data"
+
+    source_resolved = source.resolve()
+    match = next(
+        (
+            details
+            for filename, details in files.items()
+            if Path(filename).resolve() == source_resolved
+        ),
+        None,
+    )
+    if match is None:
+        return "not measured"
+    try:
+        summary = match["summary"]
+        percent = float(summary["percent_covered"])
+        covered = int(summary["covered_lines"])
+        statements = int(summary["num_statements"])
+    except (KeyError, TypeError, ValueError):
         return "invalid coverage data"
     return f"{percent:.1f}% ({covered}/{statements} lines)"
 
@@ -87,7 +103,7 @@ def main():
 | Run at | `{timestamp}` |
 | Source SHA-256 | `{digest(args.source)}` |
 | Test SHA-256 | `{digest(args.test)}` |
-| Aggregate coverage | {coverage_summary(args.coverage_json)} |
+| Target source coverage | {coverage_summary(args.coverage_json, args.source)} |
 | Commit | {commit} |
 | CI | {ci_run} |
 

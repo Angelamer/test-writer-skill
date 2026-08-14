@@ -41,23 +41,50 @@ class TestReportTool(unittest.TestCase):
             path.write_text("second", encoding="utf-8")
             self.assertNotEqual(first, module.digest(path))
 
-    def test_coverage_summary_reads_coverage_json(self):
+    def test_coverage_summary_reads_target_file_only(self):
         module = load_script("test_report.py")
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "coverage.json"
+            source = Path(directory) / "src" / "target.py"
             path.write_text(
                 json.dumps(
                     {
-                        "totals": {
-                            "percent_covered": 87.25,
-                            "covered_lines": 349,
-                            "num_statements": 400,
-                        }
+                        "totals": {"percent_covered": 99.0},
+                        "files": {
+                            str(source): {
+                                "summary": {
+                                    "percent_covered": 87.25,
+                                    "covered_lines": 349,
+                                    "num_statements": 400,
+                                }
+                            },
+                            "unrelated.py": {
+                                "summary": {
+                                    "percent_covered": 100,
+                                    "covered_lines": 10,
+                                    "num_statements": 10,
+                                }
+                            },
+                        },
                     }
                 ),
                 encoding="utf-8",
             )
-            self.assertEqual(module.coverage_summary(path), "87.2% (349/400 lines)")
+            self.assertEqual(
+                module.coverage_summary(path, source), "87.2% (349/400 lines)"
+            )
+
+    def test_coverage_summary_does_not_fall_back_to_aggregate(self):
+        module = load_script("test_report.py")
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "coverage.json"
+            path.write_text(
+                json.dumps({"totals": {"percent_covered": 99.0}, "files": {}}),
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                module.coverage_summary(path, Path("missing.py")), "not measured"
+            )
 
     def test_repository_context_builds_github_links(self):
         module = load_script("test_report.py")

@@ -14,7 +14,7 @@ Create tests that expose behavior rather than merely increase coverage.
 3. Separate pure logic from I/O. Mock only process boundaries such as files, networks, clocks, models, and plotting; do not mock the behavior under test.
 4. Add focused tests for normal behavior, meaningful boundaries, failure paths, and regressions. Do not edit production code unless the user also requested a fix.
 5. Run the narrowest test command first, then the relevant suite. Prefer existing project commands; use the bundled Make commands when working in this repository. Record the exact command and its exit status.
-6. Generate a Markdown report with `make report` or `scripts/test_report.py`. Report failures honestly and explain the likely production defect.
+6. Generate a Markdown report with `make report` or `scripts/test_report.py`. Report coverage for the target source file, not aggregate project or test-code coverage. Report failures honestly and explain the likely production defect.
 7. Review the diff for unrelated changes, secrets, brittle assertions, and provider-specific attribution.
 
 ## Model and resource policy

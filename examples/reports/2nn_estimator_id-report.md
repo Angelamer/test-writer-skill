@@ -6,11 +6,11 @@
 |---|---|
 | Status | **PASS** |
 | Exit code | `0` |
-| Run at | `2026-08-14T10:57:12+00:00` |
+| Run at | `2026-08-14T11:15:07+00:00` |
 | Source SHA-256 | `e6ef38414315` |
 | Test SHA-256 | `2bc8a698d663` |
-| Aggregate coverage | 60.9% (164/251 lines) |
-| Commit | `f903b05a2acc` |
+| Target source coverage | 57.1% (42/71 lines) |
+| Commit | `7048bbb27269` |
 | CI | local run |
 
 ## Command

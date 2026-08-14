@@ -11,7 +11,7 @@ A provider-neutral skill and command-line workflow for designing Python tests, r
 - A concise [`SKILL.md`](SKILL.md) workflow for unit and integration test generation.
 - `unittest`-compatible execution with configurable source, test, and report paths.
 - Black formatting, Flake8 linting, compilation checks, coverage, and aggregate QA commands.
-- Markdown reports containing hashes, timestamps, coverage, CI metadata, exact commands, exit codes, and raw output.
+- Markdown reports containing hashes, timestamps, target-source coverage, CI metadata, exact commands, exit codes, and raw output.
 - Optional OpenAI-compatible, Ollama, or prompt-only model invocation without third-party Python SDKs.
 - A tested numerical example that keeps model files and plotting outside the unit-test boundary.
 
@@ -78,7 +78,7 @@ The test command is executed without a shell. The report is written even when te
 
 ## Continuous integration and coverage
 
-The `CI` GitHub Actions workflow runs the same checks as `make qa-full` for pushes and pull requests targeting `main`. It uploads `coverage.xml` to Codecov using GitHub OIDC, so the workflow does not require a long-lived Codecov token. The tracked example report includes aggregate measured coverage, the commit SHA, and a CI run link when generated inside GitHub Actions.
+The `CI` GitHub Actions workflow runs the same checks as `make qa-full` for pushes and pull requests targeting `main`. It uploads `coverage.xml` to Codecov using GitHub OIDC, so the workflow does not require a long-lived Codecov token. The tracked example report includes coverage for the target source file only, the commit SHA, and a CI run link when generated inside GitHub Actions. Coverage from tests, skill tooling, and unrelated modules is excluded from the report field.
 
 The CI badge reflects formatting, lint, compilation, tests, coverage generation, and report generation. Codecov upload is non-blocking because external service availability must not hide the repository's own QA result. The coverage badge is populated after the repository is activated in Codecov and Codecov processes a successful workflow upload.
 
