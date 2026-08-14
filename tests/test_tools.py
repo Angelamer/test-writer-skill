@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -39,6 +40,36 @@ class TestReportTool(unittest.TestCase):
             first = module.digest(path)
             path.write_text("second", encoding="utf-8")
             self.assertNotEqual(first, module.digest(path))
+
+    def test_coverage_summary_reads_coverage_json(self):
+        module = load_script("test_report.py")
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "coverage.json"
+            path.write_text(
+                json.dumps(
+                    {
+                        "totals": {
+                            "percent_covered": 87.25,
+                            "covered_lines": 349,
+                            "num_statements": 400,
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.assertEqual(module.coverage_summary(path), "87.2% (349/400 lines)")
+
+    def test_repository_context_builds_github_links(self):
+        module = load_script("test_report.py")
+        environment = {
+            "GITHUB_SERVER_URL": "https://github.com",
+            "GITHUB_REPOSITORY": "owner/repository",
+            "GITHUB_SHA": "0123456789abcdef",
+            "GITHUB_RUN_ID": "42",
+        }
+        commit, ci_run = module.repository_context(environment)
+        self.assertIn("/commit/0123456789abcdef", commit)
+        self.assertIn("/actions/runs/42", ci_run)
 
 
 if __name__ == "__main__":

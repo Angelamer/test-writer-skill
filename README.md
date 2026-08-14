@@ -1,5 +1,9 @@
 # Test Writer Skill
 
+[![CI](https://github.com/Angelamer/test-writer-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/Angelamer/test-writer-skill/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Angelamer/test-writer-skill/branch/main/graph/badge.svg)](https://codecov.io/gh/Angelamer/test-writer-skill)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+
 A provider-neutral skill and command-line workflow for designing Python tests, running quality checks, and producing evidence-based Markdown reports. It works with any coding agent and does not require an external LLM.
 
 ## What it provides
@@ -7,7 +11,7 @@ A provider-neutral skill and command-line workflow for designing Python tests, r
 - A concise [`SKILL.md`](SKILL.md) workflow for unit and integration test generation.
 - `unittest`-compatible execution with configurable source, test, and report paths.
 - Black formatting, Flake8 linting, compilation checks, coverage, and aggregate QA commands.
-- Markdown reports containing hashes, timestamps, exact commands, exit codes, and raw output.
+- Markdown reports containing hashes, timestamps, coverage, CI metadata, exact commands, exit codes, and raw output.
 - Optional OpenAI-compatible, Ollama, or prompt-only model invocation without third-party Python SDKs.
 - A tested numerical example that keeps model files and plotting outside the unit-test boundary.
 
@@ -71,6 +75,12 @@ make report \
 ```
 
 The test command is executed without a shell. The report is written even when tests fail, and `make` preserves the failing exit code.
+
+## Continuous integration and coverage
+
+The `CI` GitHub Actions workflow runs `make qa-full` for pushes and pull requests targeting `main`. It uploads `coverage.xml` to Codecov using GitHub OIDC, so the workflow does not require a long-lived Codecov token. The tracked example report includes aggregate measured coverage, the commit SHA, and a CI run link when generated inside GitHub Actions.
+
+The CI badge reflects the workflow result. The coverage badge is populated after Codecov processes the first successful workflow upload.
 
 ## Optional model backends
 

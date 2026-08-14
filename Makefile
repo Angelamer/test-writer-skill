@@ -68,6 +68,8 @@ test-cov:
 	MPLBACKEND=Agg MPLCONFIGDIR="$(MPLCONFIGDIR)" $(PYTHON) -m coverage run --branch -m unittest -v \
 		tests/test_tools.py $(TEST_FILE)
 	$(PYTHON) -m coverage report -m
+	$(PYTHON) -m coverage json -o coverage.json
+	$(PYTHON) -m coverage xml -o coverage.xml
 
 report:
 	@test -f "$(SOURCE)" || (echo "SOURCE not found: $(SOURCE)"; exit 2)
@@ -76,6 +78,7 @@ report:
 		--source "$(SOURCE)" \
 		--test "$(TEST_FILE)" \
 		--report "$(REPORT)" \
+		--coverage-json coverage.json \
 		-- $(PYTHON) -m unittest -v "$(TEST_FILE)"
 
 report-example:
@@ -97,4 +100,4 @@ qa-full: qa test-cov report-example
 clean:
 	find scripts examples tests -type d -name __pycache__ -prune -exec rm -rf {} +
 	find scripts examples tests -type f -name '*.py[co]' -delete
-	$(RM) .coverage
+	$(RM) .coverage coverage.json coverage.xml
